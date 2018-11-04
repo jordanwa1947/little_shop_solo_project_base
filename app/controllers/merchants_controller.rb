@@ -2,9 +2,21 @@ class MerchantsController < ApplicationController
   def index
     if current_admin?
       @merchants = User.where(role: :merchant).order(:name)
+      @top_merchants_this_month = @merchants.top_merchants_this_month
+      @top_merchants_last_month = @merchants.top_merchants_last_month
+      @top_fulfilling_this_month = @merchants.top_merchants_fulfilled_this_month
+      @top_fulfilling_last_month = @merchants.top_merchants_fulfilled_last_month
+      @top_fulfilling_for_state = @merchants.top_fulfilled_user_state
+      @top_fulfilling_for_city = @merchants.top_fulfilled_user_city
     else
       @merchants = User.where(role: :merchant, active: true).order(:name)
-    end 
+      @top_merchants_this_month = @merchants.top_merchants_this_month
+      @top_merchants_last_month = @merchants.top_merchants_last_month
+      @top_fulfilling_this_month = @merchants.top_merchants_fulfilled_this_month
+      @top_fulfilling_last_month = @merchants.top_merchants_fulfilled_last_month
+      @top_fulfilling_for_state = @merchants.top_fulfilled_user_state
+      @top_fulfilling_for_city = @merchants.top_fulfilled_user_city
+    end
   end
 
   def show

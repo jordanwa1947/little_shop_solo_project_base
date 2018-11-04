@@ -32,8 +32,35 @@ RSpec.describe Item, type: :model do
 
       expect(Item.popular_items(3)).to eq([item_3, item_4, item_2])
     end
-  end
+
+    it '.top_merchants_this_month' do
+      
+    end
+
+    it '.top_merchants_last_month' do
+
+    end
+
+    it '.top_merchants_fulfilled_last_month' do
+
+    end
+
+    it '.top_fulfilled_user_state' do
+
+    end
+
+    it '.top_fulfilled_user_city' do
+
+    end
 
   describe 'Instance Methods' do
+    it '.items_with_place_holder' do
+      user = create(:user)
+      merchant = create(:merchant)
+      item_1 = create(:item, user: merchant)
+      item_2 = create(:item, user: merchant)
+      item_3 = create(:item, user: merchant)
+      item_4 = create(:item, user: merchant)
+    end
   end
 end
