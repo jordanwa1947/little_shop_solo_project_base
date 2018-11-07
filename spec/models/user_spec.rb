@@ -145,8 +145,7 @@ RSpec.describe User, type: :model do
       end
 
       it '.top_fulfilled_user_state' do
-
-        proficient_merchants = User.fastest_fulfilled_user_city(@user_2.city)
+        proficient_merchants = User.fastest_fulfilled_user_state(@user_2.state)
 
         expect(proficient_merchants.first).to eq(@merchant_2)
       end

@@ -204,9 +204,9 @@ class User < ApplicationRecord
     .joins(:orders)
     .joins('join order_items on orders.id=order_items.order_id')
     .joins('join items on order_items.item_id=items.id')
+    .group('items.id, users.id, order_items.id')
     .pluck('items.user_id')
-
-    User.where(id: merchants).fastest_merchants(5)
+    User.where(id: merchants).fastest_merchants(5).uniq
   end
 
   def self.fastest_fulfilled_user_city(user_city)
@@ -214,6 +214,7 @@ class User < ApplicationRecord
     .joins(:orders)
     .joins('join order_items on orders.id=order_items.order_id')
     .joins('join items on order_items.item_id=items.id')
+    .group('items.id, users.id, order_items.id')
     .pluck('items.user_id')
 
     where(id: merchants).fastest_merchants(5).uniq
