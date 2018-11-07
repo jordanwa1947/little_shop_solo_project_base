@@ -82,6 +82,8 @@
   <% end %>
 <% end %>
 
+You have <%= @merchant.total_items_unfulfilled %>  unfulfilled orders worth <%= number_to_currency(@merchant.unfulfilled_revenue) %>
+
 <% if @merchant.items %>
   <% @merchant.items.each do |item| %>
       <% if item.image == 'https://picsum.photos/200/300/?image=0&blur=true' %>

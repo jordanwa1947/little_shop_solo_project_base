@@ -29,6 +29,14 @@ class User < ApplicationRecord
       .sum("order_items.quantity")
   end
 
+  def total_items_unfulfilled
+    items
+      .joins(:orders)
+      .where("orders.status != ?", :cancelled)
+      .where("order_items.fulfilled=?", false)
+      .sum("order_items.quantity")
+  end
+
   def total_inventory
     items.sum(:inventory)
   end
@@ -192,10 +200,16 @@ class User < ApplicationRecord
   end
 
   def self.fastest_fulfilled_user_state(user_state)
-    
+
   end
 
   def self.fastest_fulfilled_user_city(user_id)
 
+  end
+
+  def unfulfilled_revenue
+    items.inject(0) do |sum, item|
+      sum + item.unfulfilled_item_revenue
+    end
   end
 end
