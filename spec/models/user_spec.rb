@@ -104,18 +104,18 @@ RSpec.describe User, type: :model do
         @item_2 = create(:item, user: @merchant_2)
 
         @order_1 = create(:completed_order, user: @user_1)
-        create(:fulfilled_order_item, order: @order_1, item: @item_1, created_at: 1.month.ago, updated_at: 1.month.ago)
+        create(:fulfilled_order_item, order: @order_1, item: @item_1, created_at: 1.month.ago, updated_at: 27.days.ago)
         @order_2 = create(:completed_order, user: @user_1)
         create(:unfulfilled_order_item, order: @order_2, item: @item_1)
         @order_3 = create(:completed_order, user: @user_1)
         create(:unfulfilled_order_item, order: @order_3, item: @item_1)
 
         @order_4 = create(:completed_order, user: @user_2)
-        create(:unfulfilled_order_item, order: @order_4, item: @item_2, created_at: 1.month.ago, updated_at: 1.month.ago)
+        create(:unfulfilled_order_item, order: @order_4, item: @item_2, created_at: 1.month.ago, updated_at: 28.days.ago)
         @order_5 = create(:completed_order, user: @user_2)
-        create(:unfulfilled_order_item, order: @order_5, item: @item_2, created_at: 1.month.ago, updated_at: 1.month.ago)
+        create(:unfulfilled_order_item, order: @order_5, item: @item_2, created_at: 1.month.ago, updated_at: 28.days.ago)
         @order_6 = create(:completed_order, user: @user_3)
-        create(:unfulfilled_order_item, order: @order_6, item: @item_2, created_at: 1.month.ago, updated_at: 1.month.ago)
+        create(:unfulfilled_order_item, order: @order_6, item: @item_2, created_at: 1.month.ago, updated_at: 28.days.ago)
         @order_7 = create(:completed_order, user: @user_3)
         create(:fulfilled_order_item, order: @order_7, item: @item_2)
 
@@ -145,35 +145,16 @@ RSpec.describe User, type: :model do
       end
 
       it '.top_fulfilled_user_state' do
-        merchant_1 = create(:merchant)
-        merchant_2 = create(:merchant)
 
-        user_1 = create(:user, city: 'Tampa', state: 'FL')
+        proficient_merchants = User.fastest_fulfilled_user_city(@user_2.city)
 
-        item_1 = create(:item, user: merchant_1)
-        item_2 = create(:item, user: merchant_2)
-
-        order_1 = create(:completed_order, user: user_1)
-        create(:fulfilled_order_item, order: order_1, item: item_1, created_at: 1.day.ago)
-        order_2 = create(:completed_order, user: user_1)
-        create(:fulfilled_order_item, order: order_2, item: item_1, created_at: 1.day.ago)
-        order_3 = create(:completed_order, user: user_1)
-        create(:fulfilled_order_item, order: order_3, item: item_1, created_at: 1.day.ago)
-
-        order_4 = create(:completed_order, user: user_1)
-        create(:fulfilled_order_item, order: order_4, item: item_2, created_at: 1.day.ago)
-        order_5 = create(:completed_order, user: user_1)
-        create(:fulfilled_order_item, order: order_5, item: item_2, created_at: 2.day.ago)
-        order_6 = create(:completed_order, user: user_1)
-        create(:fulfilled_order_item, order: order_6, item: item_2, created_at: 3.day.ago)
-        order_7 = create(:completed_order, user: user_1)
-        create(:fulfilled_order_item, order: order_7, item: item_2, created_at: 4.day.ago)
-
-        expect(User.fastest_fulfilled_user_state(user_1.state)).to eq([merchant_1, merchant_2])
+        expect(proficient_merchants.first).to eq(@merchant_2)
       end
 
       it '.top_fulfilled_user_city' do
+        proficient_merchant = User.fastest_fulfilled_user_city(@user_1.city)
 
+        expect(proficient_merchant.first).to eq(@merchant_1)
       end
     end
   end

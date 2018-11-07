@@ -40,12 +40,14 @@ RSpec.describe 'Merchants Stats' do
     end
 
     it 'shows top ten merchants by sales this month' do
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user_1)
 
       visit merchants_path
 
       expect(page).to have_content("")
     end
     it 'shows top ten merchants by sales last month' do
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user_1)
 
       visit merchants_path
 
@@ -53,6 +55,7 @@ RSpec.describe 'Merchants Stats' do
     end
 
     it 'shows top ten merchants by fulfillment this month' do
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user_1)
 
       visit merchants_path
 
@@ -60,9 +63,10 @@ RSpec.describe 'Merchants Stats' do
     end
 
     it 'shows top ten merchants by fulfillment last month' do
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user_1)
 
       visit merchants_path
-
+save_and_open_page 
       expect(page).to have_content("")
     end
 

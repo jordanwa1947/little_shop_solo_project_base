@@ -200,11 +200,23 @@ class User < ApplicationRecord
   end
 
   def self.fastest_fulfilled_user_state(user_state)
+    merchants= User.where('state = ?', user_state)
+    .joins(:orders)
+    .joins('join order_items on orders.id=order_items.order_id')
+    .joins('join items on order_items.item_id=items.id')
+    .pluck('items.user_id')
 
+    User.where(id: merchants).fastest_merchants(5)
   end
 
-  def self.fastest_fulfilled_user_city(user_id)
+  def self.fastest_fulfilled_user_city(user_city)
+    merchants = User.where('city = ?', user_city)
+    .joins(:orders)
+    .joins('join order_items on orders.id=order_items.order_id')
+    .joins('join items on order_items.item_id=items.id')
+    .pluck('items.user_id')
 
+    where(id: merchants).fastest_merchants(5).uniq
   end
 
   def unfulfilled_revenue
