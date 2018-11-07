@@ -9,4 +9,7 @@ FactoryBot.define do
   factory :fulfilled_order_item, parent: :order_item do
     fulfilled { true }
   end
+  factory :unfulfilled_order_item, parent: :order_item do
+    fulfilled { false }
+  end
 end

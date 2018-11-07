@@ -39,34 +39,34 @@ RSpec.describe 'Merchants Stats' do
       create(:fulfilled_order_item, order: @order_A, item: @item_1)
     end
 
-    it 'shows top ten merchants by sales this month' do
+    xit 'shows top ten merchants by sales this month' do
 
       visit merchants_path
 
       expect(page).to have_content("")
     end
-    it 'shows top ten merchants by sales last month' do
-
-      visit merchants_path
-
-      expect(page).to have_content("")
-    end
-
-    it 'shows top ten merchants by fulfillment this month' do
+    xit 'shows top ten merchants by sales last month' do
 
       visit merchants_path
 
       expect(page).to have_content("")
     end
 
-    it 'shows top ten merchants by fulfillment last month' do
+    xit 'shows top ten merchants by fulfillment this month' do
 
       visit merchants_path
 
       expect(page).to have_content("")
     end
 
-    it 'shows top five merchants by fulfillment to users state' do
+    xit 'shows top ten merchants by fulfillment last month' do
+
+      visit merchants_path
+
+      expect(page).to have_content("")
+    end
+
+    xit 'shows top five merchants by fulfillment to users state' do
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user_1)
 
       visit merchants_path
@@ -74,7 +74,7 @@ RSpec.describe 'Merchants Stats' do
       expect(page).to have_content("")
     end
 
-    it 'shows top five merchants by fulfillment to users city' do
+    xit 'shows top five merchants by fulfillment to users city' do
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user_1)
 
       visit merchants_path

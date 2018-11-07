@@ -32,26 +32,7 @@ RSpec.describe Item, type: :model do
 
       expect(Item.popular_items(3)).to eq([item_3, item_4, item_2])
     end
-
-    it '.top_merchants_this_month' do
-      
-    end
-
-    it '.top_merchants_last_month' do
-
-    end
-
-    it '.top_merchants_fulfilled_last_month' do
-
-    end
-
-    it '.top_fulfilled_user_state' do
-
-    end
-
-    it '.top_fulfilled_user_city' do
-
-    end
+  end
 
   describe 'Instance Methods' do
     it '.items_with_place_holder' do

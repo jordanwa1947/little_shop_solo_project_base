@@ -28,7 +28,7 @@ class User < ApplicationRecord
       .where("order_items.fulfilled=?", true)
       .sum("order_items.quantity")
   end
-  
+
   def total_inventory
     items.sum(:inventory)
   end
@@ -120,8 +120,8 @@ class User < ApplicationRecord
   end
 
   def self.merchant_by_speed(quantity, order)
-    select("distinct users.*, 
-      CASE 
+    select("distinct users.*,
+      CASE
         WHEN order_items.updated_at > order_items.created_at THEN coalesce(EXTRACT(EPOCH FROM order_items.updated_at) - EXTRACT(EPOCH FROM order_items.created_at),0)
         ELSE 1000000000 END as time_diff")
       .joins(:items)
@@ -139,5 +139,73 @@ class User < ApplicationRecord
 
   def self.slowest_merchants(quantity)
     merchant_by_speed(quantity, :desc)
+  end
+
+  def self.top_merchants_this_month(month = Date.today.month)
+    select('users.*, coalesce(sum(order_items.quantity),0) as item_quantity_sold')
+    .joins('join items on items.user_id=users.id')
+    .joins('join order_items on order_items.item_id=items.id')
+    .joins('join orders on orders.id=order_items.order_id')
+    .where('extract(month from order_items.created_at) = ?', month)
+    .where('orders.status != ?', :cancelled)
+    .group(:id)
+    .order('item_quantity_sold desc')
+    .limit(10)
+  end
+
+  def self.top_merchants_last_month(month = Date.today.last_month.month)
+    select('users.*, coalesce(sum(order_items.quantity),0) as item_quantity_sold')
+    .joins('join items on items.user_id=users.id')
+    .joins('join order_items on order_items.item_id=items.id')
+    .joins('join orders on orders.id=order_items.order_id')
+    .where('extract(month from order_items.created_at) = ?', month)
+    .where('orders.status != ?', :cancelled)
+    .group(:id)
+    .order('item_quantity_sold desc')
+    .limit(10)
+  end
+
+  def self.top_merchants_fulfilled_this_month(month = Date.today.month)
+    select('users.*, coalesce(sum(order_items.quantity),0) as item_quantity_sold')
+    .joins('join items on items.user_id=users.id')
+    .joins('join order_items on order_items.item_id=items.id')
+    .joins('join orders on orders.id=order_items.order_id')
+    .where('extract(month from order_items.updated_at) = ?', month)
+    .where('order_items.fulfilled = ?', true)
+    .where('orders.status != ?', :cancelled)
+    .group(:id)
+    .order('item_quantity_sold desc')
+    .limit(10)
+  end
+
+  def self.top_merchants_fulfilled_last_month(month = Date.today.last_month.month)
+    select('users.*, coalesce(sum(order_items.quantity),0) as item_quantity_sold')
+    .joins('join items on items.user_id=users.id')
+    .joins('join order_items on order_items.item_id=items.id')
+    .joins('join orders on orders.id=order_items.order_id')
+    .where('extract(month from order_items.updated_at) = ?', month)
+    .where('order_items.fulfilled = ?', true)
+    .where('orders.status != ?', :cancelled)
+    .group(:id)
+    .order('item_quantity_sold desc')
+    .limit(10)
+  end
+
+  def top_fulfilled_user_state(quantity = 5)
+    select("distinct users.*,
+      CASE
+        WHEN order_items.updated_at > order_items.created_at THEN coalesce(EXTRACT(EPOCH FROM order_items.updated_at) - EXTRACT(EPOCH FROM order_items.created_at),0)
+        ELSE 1000000000 END as time_diff, average(time_diff) as average_fulfillment")
+      .joins(:items)
+      .joins('join order_items on items.id=order_items.item_id')
+      .joins('join orders on orders.id=order_items.order_id')
+      .where('orders.status != ?', :cancelled)
+      .group('orders.id, users.id, order_items.updated_at, order_items.created_at')
+      .order("average_fulfillment desc")
+      .limit(quantity)
+  end
+
+  def top_fulfilled_user_city
+
   end
 end
