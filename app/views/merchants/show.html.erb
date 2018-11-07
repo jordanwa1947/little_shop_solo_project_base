@@ -11,7 +11,7 @@
   </div>
   <div id="shipping-stats">
     <h3>Shipping Stats</h3>
-    
+
     <div id='stats-top-states'>
     <p>Top 3 States:</p>
       <% if @top_3_shipping_states %>
@@ -24,7 +24,7 @@
       <p>(none yet)</p>
       <% end %>
     </div>
-    
+
     <div id='stats-top-cities'>
     <p>Top 3 Cities:</p>
       <% if @top_3_shipping_cities %>
@@ -82,11 +82,19 @@
   <% end %>
 <% end %>
 
+<% if @merchant.items %>
+  <% @merchant.items.each do |item| %>
+      <% if item.image == 'https://picsum.photos/200/300/?image=0&blur=true' %>
+        <%= link_to "#{item.name} edit", edit_merchant_item_path(@merchant, item) %>
+      <% end %>
+  <% end %>
+<% end %>
+
 <% if current_admin? %>
   <% if @merchant.active %>
   <%= button_to "Disable", user_path(@merchant), method: :patch, params: { toggle: :disable } %>
   <% else %>
   <%= button_to "Enable", user_path(@merchant), method: :patch, params: { toggle: :enable } %>
   <% end %>
-  <%= button_to "Upgrade to Merchant", user_path(@merchant), method: :patch, params: { toggle: :role } %> 
+  <%= button_to "Upgrade to Merchant", user_path(@merchant), method: :patch, params: { toggle: :role } %>
 <% end %>

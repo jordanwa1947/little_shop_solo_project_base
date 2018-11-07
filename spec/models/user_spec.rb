@@ -143,6 +143,38 @@ RSpec.describe User, type: :model do
       it '.top_merchants_fulfilled_last_month' do
         expect(User.top_merchants_fulfilled_last_month.first).to eq(@merchant_1)
       end
+
+      it '.top_fulfilled_user_state' do
+        merchant_1 = create(:merchant)
+        merchant_2 = create(:merchant)
+
+        user_1 = create(:user, city: 'Tampa', state: 'FL')
+
+        item_1 = create(:item, user: merchant_1)
+        item_2 = create(:item, user: merchant_2)
+
+        order_1 = create(:completed_order, user: user_1)
+        create(:fulfilled_order_item, order: order_1, item: item_1, created_at: 1.day.ago)
+        order_2 = create(:completed_order, user: user_1)
+        create(:fulfilled_order_item, order: order_2, item: item_1, created_at: 1.day.ago)
+        order_3 = create(:completed_order, user: user_1)
+        create(:fulfilled_order_item, order: order_3, item: item_1, created_at: 1.day.ago)
+
+        order_4 = create(:completed_order, user: user_1)
+        create(:fulfilled_order_item, order: order_4, item: item_2, created_at: 1.day.ago)
+        order_5 = create(:completed_order, user: user_1)
+        create(:fulfilled_order_item, order: order_5, item: item_2, created_at: 2.day.ago)
+        order_6 = create(:completed_order, user: user_1)
+        create(:fulfilled_order_item, order: order_6, item: item_2, created_at: 3.day.ago)
+        order_7 = create(:completed_order, user: user_1)
+        create(:fulfilled_order_item, order: order_7, item: item_2, created_at: 4.day.ago)
+
+        expect(User.fastest_fulfilled_user_state(user_1.state)).to eq([merchant_1, merchant_2])
+      end
+
+      it '.top_fulfilled_user_city' do
+
+      end
     end
   end
 
@@ -351,38 +383,6 @@ RSpec.describe User, type: :model do
       create(:fulfilled_order_item, quantity: 10, price: 10, order: order_3, item: item_2)
 
       expect(merchant_1.top_buyers(3)).to eq([user_2, user_1, user_3])
-    end
-
-    it '.top_fulfilled_user_state' do
-      merchant_1 = create(:merchant)
-      merchant_2 = create(:merchant)
-
-      user_1 = create(:user, city: 'Tampa', state: 'FL')
-
-      item_1 = create(:item, user: merchant_1)
-      item_2 = create(:item, user: merchant_2)
-
-      order_1 = create(:completed_order, user: user_1)
-      create(:fulfilled_order_item, order: order_1, item: item_1, created_at: 1.day.ago)
-      order_2 = create(:completed_order, user: user_1)
-      create(:fulfilled_order_item, order: order_2, item: item_1, created_at: 1.day.ago)
-      order_3 = create(:completed_order, user: user_1)
-      create(:fulfilled_order_item, order: order_3, item: item_1, created_at: 1.day.ago)
-
-      order_4 = create(:completed_order, user: user_1)
-      create(:fulfilled_order_item, order: order_4, item: item_2, created_at: 1.day.ago)
-      order_5 = create(:completed_order, user: user_1)
-      create(:fulfilled_order_item, order: order_5, item: item_2, created_at: 2.day.ago)
-      order_6 = create(:completed_order, user: user_1)
-      create(:fulfilled_order_item, order: order_6, item: item_2, created_at: 3.day.ago)
-      order_7 = create(:completed_order, user: user_1)
-      create(:fulfilled_order_item, order: order_7, item: item_2, created_at: 4.day.ago)
-
-      expect(user_1.top_fulfilled_user_state).to eq([merchant_1, merchant_2])
-    end
-
-    it '.top_fulfilled_user_city' do
-
     end
   end
 end

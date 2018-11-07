@@ -16,13 +16,13 @@
   <% end %>
 
 <h3 class="top_fulfillment_last_month"> "Top Ten Merchants Last Month By Fullfilment Of Orders" </h3>
-  <% @top_fulfilling_for_state.each do |merchant| %>
+  <% @fastest_fulfilling_for_state.each do |merchant| %>
     <p id="merchant_<%= merchant.id %>"> <%= merchant.name %> </p>
   <% end %>
 
 <% if current_user%>
   <h3> "Top Five Merchants By Fullfilment Of Orders To My State" </h3>
-    <% @top_fulfilling_city.each do |merchant| %>
+    <% @fastest_fulfilling_city.each do |merchant| %>
       <p id="merchant_<%= merchant.id %>"> <%= merchant.name %> </p>
     <% end %>
   <h3> "Top Five Merchants By Fullfilment Of Orders To My City" </h3>

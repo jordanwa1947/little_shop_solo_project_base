@@ -191,21 +191,11 @@ class User < ApplicationRecord
     .limit(10)
   end
 
-  def top_fulfilled_user_state(quantity = 5)
-    select("distinct users.*,
-      CASE
-        WHEN order_items.updated_at > order_items.created_at THEN coalesce(EXTRACT(EPOCH FROM order_items.updated_at) - EXTRACT(EPOCH FROM order_items.created_at),0)
-        ELSE 1000000000 END as time_diff, average(time_diff) as average_fulfillment")
-      .joins(:items)
-      .joins('join order_items on items.id=order_items.item_id')
-      .joins('join orders on orders.id=order_items.order_id')
-      .where('orders.status != ?', :cancelled)
-      .group('orders.id, users.id, order_items.updated_at, order_items.created_at')
-      .order("average_fulfillment desc")
-      .limit(quantity)
+  def self.fastest_fulfilled_user_state(user_state)
+    
   end
 
-  def top_fulfilled_user_city
+  def self.fastest_fulfilled_user_city(user_id)
 
   end
 end
