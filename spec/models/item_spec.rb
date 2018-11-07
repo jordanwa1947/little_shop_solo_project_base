@@ -43,5 +43,21 @@ RSpec.describe Item, type: :model do
       item_3 = create(:item, user: merchant)
       item_4 = create(:item, user: merchant)
     end
+
+    it '.unfulfilled_item_revenue' do
+      merchant = create(:merchant)
+
+      user_1 = create(:user)
+      item_1 = create(:item, user: merchant)
+
+      order_1 = create(:completed_order, user: user_1)
+      create(:unfulfilled_order_item, order: order_1, item: item_1)
+      order_2 = create(:completed_order, user: user_1)
+      create(:unfulfilled_order_item, order: order_2, item: item_1)
+      order_3 = create(:completed_order, user: user_1)
+      create(:unfulfilled_order_item, order: order_3, item: item_1)
+      
+      expect(item_1.unfulfilled_item_revenue).to eq(87)
+    end
   end
 end

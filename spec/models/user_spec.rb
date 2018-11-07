@@ -384,5 +384,22 @@ RSpec.describe User, type: :model do
 
       expect(merchant_1.top_buyers(3)).to eq([user_2, user_1, user_3])
     end
+
+    it '.unfulfilled_revenue' do
+      merchant = create(:merchant)
+
+      user_1 = create(:user)
+      item_1 = create(:item, user: merchant)
+      item_2 = create(:item, user: merchant)
+
+      order_1 = create(:completed_order, user: user_1)
+      create(:unfulfilled_order_item, order: order_1, item: item_1)
+      order_2 = create(:completed_order, user: user_1)
+      create(:unfulfilled_order_item, order: order_2, item: item_2)
+      order_3 = create(:completed_order, user: user_1)
+      create(:unfulfilled_order_item, order: order_3, item: item_2)
+
+      expect(merchant.unfulfilled_revenue).to eq(87)
+    end
   end
 end
