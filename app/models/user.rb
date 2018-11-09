@@ -149,7 +149,7 @@ class User < ApplicationRecord
     merchant_by_speed(quantity, :desc)
   end
 
-  def self.top_merchants_this_month(month = Date.today.month)
+  def self.top_merchants_during_month(month = Date.today.month)
     select('users.*, coalesce(sum(order_items.quantity),0) as item_quantity_sold')
     .joins('join items on items.user_id=users.id')
     .joins('join order_items on order_items.item_id=items.id')
@@ -161,20 +161,8 @@ class User < ApplicationRecord
     .limit(10)
   end
 
-  def self.top_merchants_last_month(month = Date.today.last_month.month)
-    select('users.*, coalesce(sum(order_items.quantity),0) as item_quantity_sold')
-    .joins('join items on items.user_id=users.id')
-    .joins('join order_items on order_items.item_id=items.id')
-    .joins('join orders on orders.id=order_items.order_id')
-    .where('extract(month from order_items.created_at) = ?', month)
-    .where('orders.status != ?', :cancelled)
-    .group(:id)
-    .order('item_quantity_sold desc')
-    .limit(10)
-  end
-
-  def self.top_merchants_fulfilled_this_month(month = Date.today.month)
-    select('users.*, coalesce(sum(order_items.quantity),0) as item_quantity_sold')
+  def self.top_merchants_fulfilled_during_month(month = Date.today.month)
+    select('users.*, coalesce(count(order_items),0) as order_item_count')
     .joins('join items on items.user_id=users.id')
     .joins('join order_items on order_items.item_id=items.id')
     .joins('join orders on orders.id=order_items.order_id')
@@ -182,42 +170,28 @@ class User < ApplicationRecord
     .where('order_items.fulfilled = ?', true)
     .where('orders.status != ?', :cancelled)
     .group(:id)
-    .order('item_quantity_sold desc')
+    .order('order_item_count desc')
     .limit(10)
   end
 
-  def self.top_merchants_fulfilled_last_month(month = Date.today.last_month.month)
-    select('users.*, coalesce(sum(order_items.quantity),0) as item_quantity_sold')
-    .joins('join items on items.user_id=users.id')
-    .joins('join order_items on order_items.item_id=items.id')
-    .joins('join orders on orders.id=order_items.order_id')
-    .where('extract(month from order_items.updated_at) = ?', month)
-    .where('order_items.fulfilled = ?', true)
-    .where('orders.status != ?', :cancelled)
-    .group(:id)
-    .order('item_quantity_sold desc')
-    .limit(10)
-  end
-
-  def self.fastest_fulfilled_user_state(user_state)
-    merchants= User.where('state = ?', user_state)
+  def self.fastest_fulfilled_user_state(state)
+    ids= User.where('state=?', state)
     .joins(:orders)
     .joins('join order_items on orders.id=order_items.order_id')
     .joins('join items on order_items.item_id=items.id')
-    .group('items.id, users.id, order_items.id')
     .pluck('items.user_id')
-    User.where(id: merchants).fastest_merchants(5).uniq
+
+    User.where(id: ids).slowest_merchants(5).uniq
   end
 
-  def self.fastest_fulfilled_user_city(user_city)
-    merchants = User.where('city = ?', user_city)
+  def self.fastest_fulfilled_user_city(city)
+    ids= User.where('city=?', city)
     .joins(:orders)
     .joins('join order_items on orders.id=order_items.order_id')
     .joins('join items on order_items.item_id=items.id')
-    .group('items.id, users.id, order_items.id')
     .pluck('items.user_id')
 
-    where(id: merchants).fastest_merchants(5).uniq
+    User.where(id: ids).slowest_merchants(5).uniq
   end
 
   def unfulfilled_revenue

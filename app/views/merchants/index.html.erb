@@ -1,44 +1,44 @@
 <h1>Merchants</h1>
 
-<div class="top_sales_this_month">
-  <h1> "Top Ten Merchants This Month By Sales" </h3>
+<div>
+  <h3> Top Ten Merchants This Month By Sales </h3>
   <% @top_merchants_this_month.each do |merchant|%>
-    <p id="merchant_<%= merchant.id %>"> <%= merchant.name %> </p>
+    <p class="top_sales_this_month"> <%= merchant.name %> </p>
   <% end %>
 </div>
 
-<div class="top_sales_last_month">
-  <h1> "Top Ten Merchants Last Month By Sales" </h3>
+<div>
+  <h3> Top Ten Merchants Last Month By Sales </h3>
   <% @top_merchants_last_month.each do |merchant|%>
-    <p id="merchant_<%= merchant.id %>"> <%= merchant.name %> </p>
+    <p class="top_sales_last_month"> <%= merchant.name %> </p>
   <% end %>
 </div>
 
-<div class="top_fulfillment_this_month">
-  <h1> Top Ten Merchants This Month By Fullfilment Of Orders </h1>
+<div>
+  <h3> Top Ten Merchants This Month By Fullfilment Of Orders </h3>
   <% @top_fulfilling_this_month.each do |merchant|%>
-    <p id="merchant_<%= merchant.id %>"> <%= merchant.name %> </p>
+    <p class="top_fulfillment_this_month"> <%= merchant.name %> </p>
   <% end %>
 <div>
 
-<div class="top_fulfillment_last_month">
-  <h1> Top Ten Merchants Last Month By Fullfilment Of Orders </h1>
+<div>
+  <h3> Top Ten Merchants Last Month By Fullfilment Of Orders </h3>
   <% @top_fulfilling_last_month.each do |merchant|%>
-    <p id="merchant_<%= merchant.id %>"> <%= merchant.name %> </p>
+    <p class="top_fulfillment_last_month"> <%= merchant.name %> </p>
   <% end %>
 </div>
 
 <% if current_user%>
-<div class="fulfillment_by_state">
-  <h1> Top Five Merchants By Fullfilment Of Orders To My State </h1>
+<div>
+  <h3> Top Five Merchants By Fullfilment Of Orders To My State </h3>
     <% @fastest_fulfilling_for_state.each do |merchant|%>
-      <p id="merchant_<%= merchant.id %>"> <%= merchant.name %> </p>
+      <p class="fulfillment_by_state"> <%= merchant.name %> </p>
     <% end %>
 </div>
-<div class="fulfillment_by_city">
-  <h1> Top Five Merchants By Fullfilment Of Orders To My City </h1>
+<div>
+  <h3> Top Five Merchants By Fullfilment Of Orders To My City </h3>
     <% @fastest_fulfilling_for_city.each do |merchant|%>
-      <p id="merchant_<%= merchant.id %>"> <%= merchant.name %> </p>
+      <p class="fulfillment_by_city"> <%= merchant.name %> </p>
     <% end %>
 </div>
 <% end %>

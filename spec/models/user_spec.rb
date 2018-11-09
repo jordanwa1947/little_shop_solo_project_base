@@ -71,16 +71,16 @@ RSpec.describe User, type: :model do
       before(:each) do
         user = create(:user)
         @merchant_1, @merchant_2, @merchant_3, @merchant_4 = create_list(:merchant, 4)
-        item_1 = create(:item, user: @merchant_1)
-        item_2 = create(:item, user: @merchant_2)
-        item_3 = create(:item, user: @merchant_3)
-        item_4 = create(:item, user: @merchant_4)
+        @item_1 = create(:item, user: @merchant_1)
+        @item_2 = create(:item, user: @merchant_2)
+        @item_3 = create(:item, user: @merchant_3)
+        @item_4 = create(:item, user: @merchant_4)
 
         order = create(:order, user: user)
-        create(:fulfilled_order_item, order: order, item: item_1, created_at: 1.year.ago)
-        create(:fulfilled_order_item, order: order, item: item_2, created_at: 10.days.ago)
-        create(:order_item, order: order, item: item_3, price: 3, quantity: 1)
-        create(:fulfilled_order_item, order: order, item: item_4, created_at: 3.seconds.ago)
+        create(:fulfilled_order_item, order: order, item: @item_1, created_at: 1.year.ago)
+        create(:fulfilled_order_item, order: order, item: @item_2, created_at: 10.days.ago)
+        create(:order_item, order: order, item: @item_3, price: 3, quantity: 1)
+        create(:fulfilled_order_item, order: order, item: @item_4, created_at: 3.seconds.ago)
       end
       it '.fastest_merchants(quantity)' do
         expect(User.fastest_merchants(4)).to eq([@merchant_4, @merchant_2, @merchant_1, @merchant_3])
@@ -92,68 +92,77 @@ RSpec.describe User, type: :model do
 
     context 'Merchants Stats' do
       before(:each) do
-        @merchant_1 = create(:merchant)
-        @merchant_2 = create(:merchant)
-
-        @user_1 = create(:user, city: 'Denver', state: 'CO')
-        @user_2 = create(:user, city: 'Los Angeles', state: 'CA')
-        @user_3 = create(:user, city: 'Tampa', state: 'FL')
-        @user_4 = create(:user, city: 'NYC', state: 'NY')
-
+        @merchant_1, @merchant_2, @merchant_3, @merchant_4 = create_list(:merchant, 4)
         @item_1 = create(:item, user: @merchant_1)
         @item_2 = create(:item, user: @merchant_2)
+        @item_3 = create(:item, user: @merchant_3)
+        @item_4 = create(:item, user: @merchant_4)
 
-        @order_1 = create(:completed_order, user: @user_1)
-        create(:fulfilled_order_item, order: @order_1, item: @item_1, created_at: 1.month.ago, updated_at: 27.days.ago)
-        @order_2 = create(:completed_order, user: @user_1)
-        create(:unfulfilled_order_item, order: @order_2, item: @item_1)
-        @order_3 = create(:completed_order, user: @user_1)
-        create(:unfulfilled_order_item, order: @order_3, item: @item_1)
+        @user_1 = create(:user, city: 'Tampa', state: 'FL')
 
-        @order_4 = create(:completed_order, user: @user_2)
-        create(:unfulfilled_order_item, order: @order_4, item: @item_2, created_at: 1.month.ago, updated_at: 28.days.ago)
-        @order_5 = create(:completed_order, user: @user_2)
-        create(:unfulfilled_order_item, order: @order_5, item: @item_2, created_at: 1.month.ago, updated_at: 28.days.ago)
-        @order_6 = create(:completed_order, user: @user_3)
-        create(:unfulfilled_order_item, order: @order_6, item: @item_2, created_at: 1.month.ago, updated_at: 28.days.ago)
-        @order_7 = create(:completed_order, user: @user_3)
-        create(:fulfilled_order_item, order: @order_7, item: @item_2)
+        @order_4 = create(:completed_order, user: @user_1)
+        create(:fulfilled_order_item, order: @order_4, item: @item_1, created_at: 1.month.ago, updated_at: 28.days.ago)
+        @order_5 = create(:completed_order, user: @user_1)
+        create(:fulfilled_order_item, order: @order_5, item: @item_1, created_at: 1.month.ago, updated_at: 28.days.ago)
+        @order_6 = create(:completed_order, user: @user_1)
+        create(:unfulfilled_order_item, order: @order_6, item: @item_1, created_at: 1.month.ago, updated_at: 28.days.ago)
+        @order_7 = create(:completed_order, user: @user_1)
+        create(:unfulfilled_order_item, order: @order_7, item: @item_1, created_at: 1.month.ago, updated_at: 28.days.ago)
 
-        @order_8 = create(:completed_order, user: @user_3)
-        create(:fulfilled_order_item, order: @order_8, item: @item_1)
+        @order_8 = create(:completed_order, user: @user_1)
+        create(:unfulfilled_order_item, order: @order_8, item: @item_2, created_at: 1.days.ago)
+        @order_9 = create(:completed_order, user: @user_1)
+        create(:fulfilled_order_item, order: @order_9, item: @item_2, created_at: 1.days.ago)
+        @order_A = create(:completed_order, user: @user_1)
+        create(:fulfilled_order_item, order: @order_A, item: @item_2, created_at: 1.days.ago)
+        @order_K = create(:completed_order, user: @user_1)
+        create(:fulfilled_order_item, order: @order_K, item: @item_2, created_at: 1.month.ago, updated_at: 27.days.ago)
 
-        @order_9 = create(:completed_order, user: @user_4)
-        create(:fulfilled_order_item, order: @order_9, item: @item_1)
-        @order_A = create(:completed_order, user: @user_4)
-        create(:fulfilled_order_item, order: @order_A, item: @item_1)
+        @order_B = create(:completed_order, user: @user_1)
+        create(:fulfilled_order_item, order: @order_B, item: @item_3, created_at: 1.month.ago, updated_at: 29.days.ago)
+        @order_J = create(:completed_order, user: @user_1)
+        create(:fulfilled_order_item, order: @order_J, item: @item_3, created_at: 1.month.ago, updated_at: 29.days.ago)
+        @order_C = create(:completed_order, user: @user_1)
+        create(:unfulfilled_order_item, order: @order_C, item: @item_3, created_at: 3.days.ago)
+        @order_E = create(:completed_order, user: @user_1)
+        create(:unfulfilled_order_item, order: @order_E, item: @item_3, created_at: 3.days.ago)
+
+        @order_F = create(:completed_order, user: @user_1)
+        create(:fulfilled_order_item, order: @order_F, item: @item_4, created_at: 2.days.ago)
+        @order_G = create(:completed_order, user: @user_1)
+        create(:unfulfilled_order_item, order: @order_G, item: @item_4, created_at: 2.days.ago)
+        @order_H = create(:completed_order, user: @user_1)
+        create(:unfulfilled_order_item, order: @order_H, item: @item_4, created_at: 1.days.ago)
+        @order_I = create(:completed_order, user: @user_1)
+        create(:unfulfilled_order_item, order: @order_I, item: @item_4, created_at: 1.days.ago)
       end
 
       it '.top_merchants_this_month' do
-        expect(User.top_merchants_this_month.first).to eq(@merchant_1)
+        expect(User.top_merchants_during_month).to eq([@merchant_4, @merchant_3, @merchant_2])
       end
 
       it '.top_merchants_last_month' do
-        expect(User.top_merchants_last_month.first).to eq(@merchant_2)
+        expect(User.top_merchants_during_month(10)).to eq([@merchant_3, @merchant_1, @merchant_2])
       end
 
       it '.top_merchants_fulfilled_this_month' do
-        expect(User.top_merchants_fulfilled_this_month.first).to eq(@merchant_1)
+        expect(User.top_merchants_fulfilled_during_month).to eq([@merchant_2, @merchant_4])
       end
 
       it '.top_merchants_fulfilled_last_month' do
-        expect(User.top_merchants_fulfilled_last_month.first).to eq(@merchant_1)
+        expect(User.top_merchants_fulfilled_during_month(10)).to eq([@merchant_1, @merchant_3, @merchant_2])
       end
 
       it '.top_fulfilled_user_state' do
-        proficient_merchants = User.fastest_fulfilled_user_state(@user_2.state)
+        proficient_merchants = User.fastest_fulfilled_user_state(@user_1.state)
 
-        expect(proficient_merchants.first).to eq(@merchant_2)
+        expect(proficient_merchants).to eq([@merchant_2, @merchant_3, @merchant_1])
       end
 
       it '.top_fulfilled_user_city' do
         proficient_merchant = User.fastest_fulfilled_user_city(@user_1.city)
 
-        expect(proficient_merchant.first).to eq(@merchant_1)
+        expect(proficient_merchant).to eq([@merchant_2, @merchant_3, @merchant_1])
       end
     end
   end
